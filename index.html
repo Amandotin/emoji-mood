@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: white;
+      color: black;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #f5f5f5;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    .emoji-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+    .emoji {
+      padding: 5px;
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .emoji:hover {
+      transform: scale(1.3);
+      filter: brightness(1.2);
+    }
+    .toggle-button {
+      margin: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: gray;
+      color: white;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .toggle-button:hover {
+      background-color: darkgray;
+      transform: scale(1.05);
+    }
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.4s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .modal-content {
+      background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+      margin: 20% auto;
+      padding: 20px;
+      border: 2px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+    .modal-content:hover {
+      transform: scale(1.02);
+    }
+    .dark-mode .modal-content {
+      background: linear-gradient(135deg, #333, #555);
+      border-color: #ccc;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .close:hover,
+    .close:focus {
+      color: #000;
+      transform: rotate(15deg);
+    }
+    .dark-mode .close:hover,
+    .dark-mode .close:focus {
+      color: #fff;
+    }
+  </style>
+</head>
+<body onload="initPage()">
+
+  <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  <h2>How are you feeling today? 🤔</h2>
+
+  <div class="emoji-container">
+    <!-- Example set of emojis with poetic lines -->
+    <!-- Example: Pop-up for each emoji with a poetic line -->
+    <span class="emoji" onclick="showMood('😔', 'Relieved Face', 'In the quiet sigh of relief, burdens melt away.')">😔</span>
+    <span class="emoji" onclick="showMood('😪', 'Pensive Face', 'In the midnight of thought, your heart wanders gently.')">😪</span>
+    <span class="emoji" onclick="showMood('🤤', 'Sleepy Face', 'Dreams beckon softly as eyelids droop.')">🤤</span>
+    <span class="emoji" onclick="showMood('😴', 'Drooling Face', 'In a world of slumber, whimsy dances in dreams.')">😴</span>
+    <span class="emoji" onclick="showMood('😷', 'Sleeping Face', 'Silent sleep cradles the weary soul.')">😷</span>
+    <span class="emoji" onclick="showMood('🤒', 'Face with Medical Mask', 'Beneath the mask, hope whispers in healing tones.')">🤒</span>
+    <span class="emoji" onclick="showMood('🤕', 'Face with Thermometer', 'Fevered thoughts swirl in a tender haze.')">🤕</span>
+    <span class="emoji" onclick="showMood('🤢', 'Face with Head-Bandage', 'Wounded yet resilient, your spirit mends quietly.')">🤢</span>
+    <span class="emoji" onclick="showMood('🤮', 'Nauseated Face', 'The storm inside ebbs as you brace the tide.')">🤮</span>
+    <span class="emoji" onclick="showMood('🤧', 'Face Vomiting', 'Release and renewal, like autumn leaves falling.')">🤧</span>
+    <span class="emoji" onclick="showMood('🥵', 'Hot Face', 'A burning passion ignites the summer within.')">🥵</span>
+    <span class="emoji" onclick="showMood('🥶', 'Cold Face', 'Winter’s chill paints your soul in frost.')">🥶</span>
+    <span class="emoji" onclick="showMood('🥴', 'Woozy Face', 'A dizzy waltz where reality softly blurs.')">🥴</span>
+    <span class="emoji" onclick="showMood('😵', 'Face with Crossed-Out Eyes', 'Overwhelmed, you drift in a sea of wonder.')">😵</span>
+    <span class="emoji" onclick="showMood('😵‍💫', 'Face with Spiral Eyes', 'Thoughts spin like a wild, gentle storm.')">😵‍💫</span>
+    <span class="emoji" onclick="showMood('🤯', 'Exploding Head', 'A burst of insight shatters the mundane.')">🤯</span>
+    <span class="emoji" onclick="showMood('🤠', 'Cowboy Hat Face', 'With daring heart, you ride the sunset trail.')">🤠</span>
+    <span class="emoji" onclick="showMood('🥳', 'Partying Face', 'Celebrate the heartbeat of a vibrant night.')">🥳</span>
+    <span class="emoji" onclick="showMood('🥸', 'Disguised Face', 'Incognito secrets glisten like hidden jewels.')">🥸</span>
+    <span class="emoji" onclick="showMood('😎', 'Smiling Face with Sunglasses', 'Cool confidence shines like a summer sun.')">😎</span>
+    <span class="emoji" onclick="showMood('🤓', 'Nerd Face', 'Your intellect sparkles like dew on dawn’s grass.')">🤓</span>
+    <span class="emoji" onclick="showMood('🧐', 'Face with Monocle', 'Curiosity refines your view, a timeless art.')">🧐</span>
+    <span class="emoji" onclick="showMood('😕', 'Confused Face', 'Questions bloom like wildflowers in a puzzled mind.')">😕</span>
+    <span class="emoji" onclick="showMood('🫤', 'Face with Diagonal Mouth', 'A skewed smile reflects a world askew.')">🫤</span>
+    <span class="emoji" onclick="showMood('😟', 'Worried Face', 'Soft worry echoes in the corridors of your heart.')">😟</span>
+    <span class="emoji" onclick="showMood('🙁', 'Slightly Frowning Face', 'A gentle frown speaks of quiet melancholy.')">🙁</span>
+    <span class="emoji" onclick="showMood('☹️', 'Frowning Face', 'Somber shadows drape your tender day.')">☹️</span>
+    <span class="emoji" onclick="showMood('😮', 'Face with Open Mouth', 'Surprise unfurls like petals at dawn.')">😮</span>
+    <span class="emoji" onclick="showMood('😯', 'Hushed Face', 'A silent marvel whispers in the still air.')">😯</span>
+    <span class="emoji" onclick="showMood('😲', 'Astonished Face', 'Wonder strikes like lightning in your eyes.')">😲</span>
+    <span class="emoji" onclick="showMood('😳', 'Flushed Face', 'Embarrassment burns like a secret flame.')">😳</span>
+    <span class="emoji" onclick="showMood('🥺', 'Pleading Face', 'Eyes plead for kindness in a silent sonnet.')">🥺</span>
+    <span class="emoji" onclick="showMood('🥹', 'Face Holding Back Tears', 'Tears held back, verses of unsung pain.')">🥹</span>
+    <span class="emoji" onclick="showMood('😦', 'Frowning Face with Open Mouth', 'Shock and dismay entwine in a silent cry.')">😦</span>
+    <span class="emoji" onclick="showMood('😧', 'Anguished Face', 'Pain etches its sorrow on your soul.')">😧</span>
+    <span class="emoji" onclick="showMood('😨', 'Fearful Face', 'A chill of fear shivers through your being.')">😨</span>
+    <span class="emoji" onclick="showMood('😰', 'Anxious Face with Sweat', 'Heartbeats race in the storm of anxiety.')">😰</span>
+    <span class="emoji" onclick="showMood('😥', 'Sad But Relieved Face', 'Bittersweet solace in a quiet sigh.')">😥</span>
+    <span class="emoji" onclick="showMood('😢', 'Crying Face', 'A single tear writes a verse of fragile beauty.')">😢</span>
+    <span class="emoji" onclick="showMood('😭', 'Loudly Crying Face', 'Emotions pour like rain in a storm of tears.')">😭</span>
+    <span class="emoji" onclick="showMood('😱', 'Face Screaming in Fear', 'A piercing scream echoes in the void.')">😱</span>
+    <span class="emoji" onclick="showMood('😖', 'Confounded Face', 'Confusion weaves through thoughts like tangled vines.')">😖</span>
+    <span class="emoji" onclick="showMood('😣', 'Persevering Face', 'Struggle tempers your spirit in the fire of life.')">😣</span>
+    <span class="emoji" onclick="showMood('😞', 'Disappointed Face', 'Hopes wane like twilight fading into night.')">😞</span>
+    <span class="emoji" onclick="showMood('😓', 'Downcast Face with Sweat', 'Effort and defeat dance in a weary waltz.')">😓</span>
+    <span class="emoji" onclick="showMood('😩', 'Weary Face', 'Exhaustion drapes you like a heavy shroud.')">😩</span>
+    <span class="emoji" onclick="showMood('😫', 'Tired Face', 'Fatigue whispers softly, lulling you into rest.')">😫</span>
+    <span class="emoji" onclick="showMood('🥱', 'Yawning Face', 'A wide yawn sings a lullaby to the night.')">🥱</span>
+    <span class="emoji" onclick="showMood('😤', 'Face with Steam from Nose', 'Rage simmers like a fire waiting to ignite.')">😤</span>
+    <span class="emoji" onclick="showMood('😡', 'Enraged Face', 'Anger roars like a tempest in your chest.')">😡</span>
+    <span class="emoji" onclick="showMood('😠', 'Angry Face', 'Fury burns with an unyielding, fierce flame.')">😠</span>
+    <span class="emoji" onclick="showMood('🤬', 'Face with Symbols on Mouth', 'Words fail as symbols express your wrath.')">🤬</span>
+    <span class="emoji" onclick="showMood('😈', 'Smiling Face with Horns', 'Mischief dances in a devilish, playful grin.')">😈</span>
+    <span class="emoji" onclick="showMood('👿', 'Angry Face with Horns', 'Demonic anger rages with untamed force.')">👿</span>
+    <span class="emoji" onclick="showMood('💀', 'Skull', 'A haunting reminder of life’s fragile brevity.')">💀</span>
+    <span class="emoji" onclick="showMood('☠️', 'Skull and Crossbones', 'Danger lurks in the shadow of mortality.')">☠️</span>
+    <span class="emoji" onclick="showMood('💩', 'Pile of Poo', 'Even in the muck, humor finds a way to bloom.')">💩</span>
+    <span class="emoji" onclick="showMood('🤡', 'Clown Face', 'Laughter hides behind a whimsical painted mask.')">🤡</span>
+    <span class="emoji" onclick="showMood('👹', 'Ogre', 'The inner beast roars in forgotten legends.')">👹</span>
+    <span class="emoji" onclick="showMood('👺', 'Goblin', 'Trickster whispers meander in mischief’s alley.')">👺</span>
+    <span class="emoji" onclick="showMood('👻', 'Ghost', 'A spectral waltz drifts through time’s corridors.')">👻</span>
+    <span class="emoji" onclick="showMood('👽', 'Alien', 'From distant worlds, your spirit dares to dream.')">👽</span>
+    <span class="emoji" onclick="showMood('👾', 'Alien Monster', 'Oddity blossoms into a curious, untold beauty.')">👾</span>
+    <span class="emoji" onclick="showMood('🤖', 'Robot', 'Mechanical hums echo in precise harmony.')">🤖</span>
+    <span class="emoji" onclick="showMood('😺', 'Grinning Cat', 'A purr of joy radiates from your playful grin.')">😺</span>
+    <span class="emoji" onclick="showMood('😸', 'Grinning Cat with Smiling Eyes', 'Joy sparkles like stars in a midnight sky.')">😸</span>
+    <span class="emoji" onclick="showMood('😹', 'Cat with Tears of Joy', 'Laughter cascades like gentle raindrops on soft fur.')">😹</span>
+    <span class="emoji" onclick="showMood('😻', 'Smiling Cat with Heart-Eyes', 'Love purrs in a gaze that warms the coldest night.')">😻</span>
+    <span class="emoji" onclick="showMood('😼', 'Cat with Wry Smile', 'A sly smirk whispers secrets of playful mischief.')">😼</span>
+    <span class="emoji" onclick="showMood('😽', 'Kissing Cat', 'A tender kiss, soft as a whispered lullaby.')">😽</span>
+    <span class="emoji" onclick="showMood('🙀', 'Weary Cat', 'Even feline hearts have moments of quiet fatigue.')">🙀</span>
+    <span class="emoji" onclick="showMood('😿', 'Crying Cat', 'A soft mew echoes a tender, sorrowful tune.')">😿</span>
+    <span class="emoji" onclick="showMood('😾', 'Pouting Cat', 'A pout sings a silent ballad of discontent.')">😾</span>
+    <span class="emoji" onclick="showMood('🙈', 'See-No-Evil Monkey', 'Eyes closed to chaos, finding solace in silence.')">🙈</span>
+    <span class="emoji" onclick="showMood('🙉', 'Hear-No-Evil Monkey', 'Deaf to despair, tuned to inner peace.')">🙉</span>
+    <span class="emoji" onclick="showMood('🙊', 'Speak-No-Evil Monkey', 'When words fail, silence speaks its truth.')">🙊</span>
+    <span class="emoji" onclick="showMood('💯', 'Hundred Points', 'Every heartbeat scores perfection in passion.')">💯</span>
+    <span class="emoji" onclick="showMood('💢', 'Anger Symbol', 'A spark of fury lights the dark within.')">💢</span>
+    <span class="emoji" onclick="showMood('💥', 'Collision', 'Explosive moments shatter the quiet of monotony.')">💥</span>
+    <span class="emoji" onclick="showMood('💫', 'Dizzy', 'Whirling thoughts spiral in a cosmic ballet.')">💫</span>
+    <span class="emoji" onclick="showMood('💦', 'Sweat Droplets', 'Effort drips like rain in a determined storm.')">💦</span>
+    <span class="emoji" onclick="showMood('💨', 'Dashing Away', 'Swift as the wind, you leave worries behind.')">💨</span>
+    <span class="emoji" onclick="showMood('🕳️', 'Hole', 'Into the mysterious void, secrets beckon.')">🕳️</span>
+    <span class="emoji" onclick="showMood('💬', 'Speech Balloon', 'Words take flight on the wings of conversation.')">💬</span>
+    <span class="emoji" onclick="showMood('👁️‍🗨️', 'Eye in Speech Bubble', 'Observing thoughts that float in the air.')">👁️‍🗨️</span>
+    <span class="emoji" onclick="showMood('🗨️', 'Left Speech Bubble', 'Messages drift like soft echoes in the ether.')">🗨️</span>
+    <span class="emoji" onclick="showMood('🗯️', 'Right Anger Bubble', 'Anger bursts forth in a vivid, fiery outcry.')">🗯️</span>
+    <span class="emoji" onclick="showMood('💭', 'Thought Balloon', 'Ideas bloom in the quiet garden of your mind.')">💭</span>
+    <span class="emoji" onclick="showMood('💤', 'Zzz', 'Sleep cradles you in a gentle, endless lullaby.')">💤</span>
+  </div>
+    <!-- More emojis … (all the rest as before) -->
+    <!-- For brevity, you can include the full list of 89 emojis as shown in previous code -->
+  </div>
+
+  <!-- Modal for pop-up -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <p id="modalMessage"></p>
+    </div>
+  </div>
+
+  <script>
+    function showMood(emoji, mood, poetry) {
+      let message = emoji + " " + mood + "<br><i>" + poetry + "</i>";
+      document.getElementById("modalMessage").innerHTML = message;
+      localStorage.setItem("savedMood", message);
+      openModal();
+    }
+    
+    function openModal() {
+      document.getElementById("modal").style.display = "block";
+    }
+    
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+    
+    // Optional: close the modal if clicking outside its content
+    window.onclick = function(event) {
+      let modal = document.getElementById("modal");
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+    
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      let isDarkMode = document.body.classList.contains("dark-mode");
+      localStorage.setItem("darkMode", isDarkMode);
+    }
+    
+    function initPage() {
+      if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark-mode");
+      }
+      // Saved mood is not auto-opened to prevent unwanted pop-ups.
+    }
+  </script>
+</body>
+</html>
